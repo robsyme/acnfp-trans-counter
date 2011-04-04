@@ -16,12 +16,14 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/robsyme/acnfp-trans-counter"
   gem.license = "MIT"
   gem.summary = %Q{A quick and dirty tool for analysis of transition and transversion frequency aross and alignment}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.description = %Q{A quick and dirty tool for analysis of transition and transversion frequency aross and alignment}
   gem.email = "rob.syme@gmail.com"
   gem.authors = ["Robert Syme"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
   # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
   #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
+  gem.add_runtime_dependency 'bio', '>= 1.4.1'
+  gem.add_runtime_dependency 'thor', '>= 0.14.6'
   #  gem.add_development_dependency 'rspec', '> 1.2.3'
 end
 Jeweler::RubygemsDotOrgTasks.new

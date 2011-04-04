@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+require "bio"
+require "thor"
+
+
+class AcnfpTransCounter < Thor
+  desc "analyse FILENAME", "Run acnfp-trans-counter on a given alignment"
+  def analyse(filename)
+    alignments = Bio::FlatFile.open(filename)
+    
+    alignments.to_a.combination(2) do |a,b|
+      transition_count = 0
+      transversion_count = 0
+      indel_count = 0
+      
+      alignment = Bio::Alignment::OriginalAlignment.new([a,b])
+      alignment.each_site do |site|
+        next if site[0] == site[1]
+        next if site.has_gap?
+        next if site.include? "N"
+
+        case site.sort.map{|char| char.upcase}
+        when %w{C T}, %w{A G}
+          transition_count += 1
+        when %w{A C}, %w{A T}, %w{C G}, %w{G T}
+          transversion_count += 1
+        else
+          raise "Unknown pairing: #{site}"
+        end
+      end
+
+      mutation_count = transversion_count + transition_count.to_f
+      
+      header = "%s vs %s" % [a.definition, b.definition]
+      puts header
+      puts "=" * header.length
+
+      puts "Transversions: %d (%.2f%%)" % [transversion_count, 100 * transversion_count / mutation_count]
+      puts "Transitions:   %d (%.2f%%)" % [transition_count, 100 * transition_count / mutation_count]
+
+      puts "Transversions / Transitions: %.2f" % [transversion_count.to_f / transition_count]
+      puts
+    end
+  end
+end
+
+
+AcnfpTransCounter.start
