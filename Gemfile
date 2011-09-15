@@ -6,7 +6,7 @@ source "http://rubygems.org"
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
-  gem "bio", ">=1.4.1"
+  gem "bio", ">=1.4"
   gem "thor", ">=0.14.6"
   gem "shoulda", ">= 0"
   gem "bundler", "~> 1.0.0"

@@ -12,13 +12,17 @@ class AcnfpTransCounter < Thor
       transition_count = 0
       transversion_count = 0
       indel_count = 0
+      informative_count = 0
       
       alignment = Bio::Alignment::OriginalAlignment.new([a,b])
       alignment.each_site do |site|
-        next if site[0] == site[1]
         next if site.has_gap?
-        next if site.include? "N"
 
+        if site[0] == site[1] or site.include? "N"
+          informative_count += 1
+          next
+        end
+        
         case site.sort.map{|char| char.upcase}
         when %w{C T}, %w{A G}
           transition_count += 1
@@ -37,8 +41,8 @@ class AcnfpTransCounter < Thor
 
       puts "Transversions: %d (%.2f%%)" % [transversion_count, 100 * transversion_count / mutation_count]
       puts "Transitions:   %d (%.2f%%)" % [transition_count, 100 * transition_count / mutation_count]
-
       puts "Transversions / Transitions: %.2f" % [transversion_count.to_f / transition_count]
+      puts "Non-indel sites: %d" % informative_count
       puts
     end
   end
